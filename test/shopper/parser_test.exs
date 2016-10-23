@@ -19,6 +19,13 @@ defmodule Shopper.ParserTest do
     assert Parser.parse("<@#{@my_id}>: add", @my_id) == :add
   end
 
+  test "add w/ items" do
+    result = {:add, ["stuff", "things"]}
+    assert Parser.parse("<@#{@my_id}> add stuff things", @my_id) == result
+    assert Parser.parse("<@#{@my_id}>:add stuff things", @my_id) == result
+    assert Parser.parse("<@#{@my_id}>: add stuff things", @my_id) == result
+  end
+
   test "clear" do
     assert Parser.parse("<@#{@my_id}> clear", @my_id) == :clear
     assert Parser.parse("<@#{@my_id}>:clear", @my_id) == :clear
