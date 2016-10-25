@@ -13,7 +13,7 @@ defmodule Shopper.Slack do
   def handle_message(message = %{type: "message", channel: channel}, slack) do
     case Shopper.Parser.parse(message.text, slack.me.id) do
       :info -> show_list_info(message, slack)
-      :add -> add_item_to_list(message, slack)
+      {:add, items_list} -> add_items(items_list, message, slack)
       :clear -> clear_list(message, slack)
       _ -> :ok
     end
@@ -22,12 +22,24 @@ defmodule Shopper.Slack do
   def handle_message(_message, _slack), do: :ok
 
   defp show_list_info(%{channel: channel}, slack) do
-    send_message("You requested info!", channel, slack)
+    Shopper.Store.get
+    |> Shopper.ShoppingList.info
+    |> send_message(channel, slack)
     :ok
   end
 
-  defp add_item_to_list(%{channel: channel}, slack) do
-    send_message("You requrested add!", channel, slack)
+  defp add_items(items_list, %{channel: channel}, slack) do
+    current_list = Shopper.Store.get
+
+    current_list
+    |> Shopper.ShoppingList.add(items_list)
+    |> Shopper.Store.set
+
+    items_list
+    |> Enum.join(" ")
+    |> (fn(list) -> "The following items have successfully been added to the list:\n" <> list end).()
+    |> send_message(channel, slack)
+
     :ok
   end
 

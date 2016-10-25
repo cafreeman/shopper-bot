@@ -15,7 +15,6 @@ defmodule Shopper.Parser do
     cond do
       message =~ make_command_regex(my_id, "(?:info)?") -> :info
       message =~ make_command_regex(my_id, "clear") -> :clear
-
       message =~ make_command_regex(my_id, "add", ".*") ->
         items_list = message
         |> strip_add
