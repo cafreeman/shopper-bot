@@ -1,5 +1,11 @@
 defmodule Shopper.Slack do
+  @moduledoc """
+  The module for connecting to and interacting with the Slack API. This module is responsible for
+  getting/setting data in the DETS store, as well as passing incoming messages to the parser and
+  dispatching to the correct behavior (add, clear, info) accordingly.
+  """
   use Slack
+  alias Shopper.ShoppingList
 
   def handle_connect(slack) do
     IO.puts "Connected as #{slack.me.name}"
@@ -23,7 +29,7 @@ defmodule Shopper.Slack do
 
   defp show_list_info(%{channel: channel}, slack) do
     Shopper.Store.get
-    |> Shopper.ShoppingList.info
+    |> ShoppingList.info
     |> send_message(channel, slack)
     :ok
   end
@@ -32,7 +38,7 @@ defmodule Shopper.Slack do
     current_list = Shopper.Store.get
 
     current_list
-    |> Shopper.ShoppingList.add(items_list)
+    |> ShoppingList.add(items_list)
     |> Shopper.Store.set
 
     items_list
@@ -44,7 +50,8 @@ defmodule Shopper.Slack do
   end
 
   defp clear_list(%{channel: channel}, slack) do
-    send_message("You requrested clear!", channel, slack)
+    ShoppingList.new() |> Shopper.Store.set
+    send_message("I've created a brand new list for you!", channel, slack)
     :ok
   end
 

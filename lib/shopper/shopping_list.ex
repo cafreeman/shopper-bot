@@ -6,6 +6,8 @@ defmodule Shopper.ShoppingList do
   @type t :: %ShoppingList{count: integer, items: MapSet.t}
   defstruct count: 0, items: %MapSet{}
 
+  ##### Constructor #####
+
   @spec new([String.t]) :: ShoppingList.t
   def new(items) when is_list(items) do
     %ShoppingList{items: MapSet.new(items), count: length(items)}
@@ -20,6 +22,8 @@ defmodule Shopper.ShoppingList do
   def new() do
     %ShoppingList{}
   end
+
+  ##### ADD #####
 
   @spec add(ShoppingList.t, String.t) :: ShoppingList.t
   def add(list = %ShoppingList{items: items}, new_item) when is_binary(new_item) do
@@ -36,6 +40,8 @@ defmodule Shopper.ShoppingList do
 
     %{list | items: new_list, count: MapSet.size(new_list)}
   end
+
+  ##### INFO #####
 
   @spec info(ShoppingList.t) :: String.t
   def info(list = %ShoppingList{}) do
