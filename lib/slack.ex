@@ -24,7 +24,7 @@ defmodule Shopper.Slack do
 
   def handle_message(message = %{type: "message", channel: channel}, slack) do
     case Shopper.Parser.parse(message.text, slack.me.id) do
-      :hello -> say_hello(message, slack)
+      :help -> show_help(message, slack)
       :info -> show_list_info(message, slack)
       {:add, items_list} -> add_items(items_list, message, slack)
       :clear -> clear_list(message, slack)
@@ -34,7 +34,7 @@ defmodule Shopper.Slack do
 
   def handle_message(_message, _slack), do: :ok
 
-  defp say_hello(%{channel: channel}, slack) do
+  defp show_help(%{channel: channel}, slack) do
     greeting = ~s"Hello there! I'm your friendly shopping bot! Here's what I can help you with:\n"
     commands_message = @commands_map
     |> Enum.map_join("", fn({key, value}) -> "- #{key}: #{value}\n" end)

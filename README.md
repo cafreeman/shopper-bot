@@ -1,4 +1,4 @@
-# ShoppingBot
+# Shopper Bot
 
 **TODO: Add description**
 
@@ -6,11 +6,11 @@
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
 
-  1. Add `shopping_bot` to your list of dependencies in `mix.exs`:
+  1. Add `shopper` to your list of dependencies in `mix.exs`:
 
     ```elixir
     def deps do
-      [{:shopping_bot, "~> 0.1.0"}]
+      [{:shopper, "~> 0.1.0"}]
     end
     ```
 
@@ -18,7 +18,6 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
     ```elixir
     def application do
-      [applications: [:shopping_bot]]
+      [applications: [:shopper]]
     end
     ```
-
