@@ -9,8 +9,11 @@ defmodule Shopper.Parser do
 
   An empty message (.e.g "@shopper") will also trigger the "info" match
   """
-  @items_regex ~r/\s*(\w+)\s*/
+  # @items_regex ~r/\s*(\w+)\s*/
+  @items_regex ~r/\s?,\s?/
+  @add_command_lookbehind ~r/(?<=add)(\s+)/
 
+  @spec parse(String.t, String.t) :: atom | {atom, [String.t]}
   def parse(message, my_id) do
     cond do
       message =~ make_command_regex(my_id, "(?:info)?") -> :info
@@ -29,14 +32,22 @@ defmodule Shopper.Parser do
     end
   end
 
+  @spec extract_items(String.t) :: [String.t]
   def extract_items(message) do
     @items_regex
-    |> Regex.scan(message)
-    |> Enum.flat_map(fn(pair) -> tl(pair) end)
+    |> Regex.split(message)
+    |> Enum.filter_map(fn(v) -> String.length(v) != 0 end, &(String.trim(&1)))
   end
 
+  # def extract_items(message) do
+  #   @items_regex
+  #   |> Regex.scan(message)
+  #   |> Enum.flat_map(fn(pair) -> tl(pair) end)
+  # end
+
+  @spec strip_add(String.t) :: String.t
   defp strip_add(message) do
-    case Regex.split(~r/(?<=add)(\s+)/, message) do
+    case Regex.split(@add_command_lookbehind, message) do
       [_, items] -> items
       [_] -> ""
     end

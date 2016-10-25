@@ -19,11 +19,18 @@ defmodule Shopper.ParserTest do
     assert Parser.parse("<@#{@my_id}>: add", @my_id) == :add
   end
 
-  test "add w/ items" do
+  test "add w/ single-world items" do
     result = {:add, ["stuff", "things"]}
-    assert Parser.parse("<@#{@my_id}> add stuff things", @my_id) == result
-    assert Parser.parse("<@#{@my_id}>:add stuff things", @my_id) == result
-    assert Parser.parse("<@#{@my_id}>: add stuff things", @my_id) == result
+    assert Parser.parse("<@#{@my_id}> add stuff, things", @my_id) == result
+    assert Parser.parse("<@#{@my_id}>:add stuff,things", @my_id) == result
+    assert Parser.parse("<@#{@my_id}>: add stuff, things", @my_id) == result
+  end
+
+  test "add w/ multi-world items" do
+    result = {:add, ["topo chico", "things", "that awesome salsa"]}
+    assert Parser.parse("<@#{@my_id}> add topo chico,things, that awesome salsa", @my_id) == result
+    assert Parser.parse("<@#{@my_id}>:add topo chico,    things,  ,that awesome salsa", @my_id) == result
+    assert Parser.parse("<@#{@my_id}>: add topo chico,things,that awesome salsa", @my_id) == result
   end
 
   test "clear" do
