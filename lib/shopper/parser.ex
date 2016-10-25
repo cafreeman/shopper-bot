@@ -16,6 +16,7 @@ defmodule Shopper.Parser do
   @spec parse(String.t, String.t) :: atom | {atom, [String.t]}
   def parse(message, my_id) do
     cond do
+      message =~ make_command_regex(my_id, "hello") -> :hello
       message =~ make_command_regex(my_id, "(?:info)?") -> :info
       message =~ make_command_regex(my_id, "clear") -> :clear
       message =~ make_command_regex(my_id, "add", ".*") ->
