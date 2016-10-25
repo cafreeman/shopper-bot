@@ -2,7 +2,7 @@ defmodule Shopper.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :shopping_bot,
+    [app: :shopper,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
@@ -14,7 +14,8 @@ defmodule Shopper.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :websocket_client, :slack]]
+    [applications: [:logger, :websocket_client, :slack],
+     mod: {Shopper, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -29,6 +30,7 @@ defmodule Shopper.Mixfile do
   defp deps do
     [
       {:credo, "~> 0.4.12", only: [:dev, :test]},
+      {:dialyxir, "~> 0.3.5", only: [:dev]},
       {:slack, "~> 0.7.1"},
       {:websocket_client, git: "https://github.com/jeremyong/websocket_client"}
     ]
